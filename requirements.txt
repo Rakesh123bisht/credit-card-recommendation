@@ -4,3 +4,5 @@ openai
 langchain
 pydantic
 google-generativeai
+python-dotenv
+
