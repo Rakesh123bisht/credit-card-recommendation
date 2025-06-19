@@ -24,9 +24,8 @@ It guides users through a series of natural interactions to collect their financ
  Local Setup
 1. Clone this repository
    
-git clone https://github.com/your-username/credit-card-recommendation.git
-
-cd credit-card-recommendation
+-git clone https://github.com/your-username/credit-card-recommendation.git
+-cd credit-card-recommendation
 
 3. Install dependencies
 pip install -r requirements.txt
