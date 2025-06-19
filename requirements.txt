@@ -3,6 +3,7 @@ uvicorn
 openai
 langchain
 pydantic
-google-generativeai
 python-dotenv
+google-generativeai>=0.3.1
+
 
