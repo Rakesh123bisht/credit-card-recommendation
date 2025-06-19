@@ -77,4 +77,5 @@ Frontend will be auto-served from the /static folder.
 
 ---
 📸 Demo
+
 A demo video or GIF will be added here soon!
