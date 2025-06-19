@@ -6,7 +6,7 @@ from pydantic import BaseModel
 import json, re, os
 
 from dotenv import load_dotenv
-import google.generativeai as genai
+import google as genai
 
 # Load API key
 load_dotenv()
