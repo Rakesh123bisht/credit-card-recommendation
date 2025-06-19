@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credit Card Recommender</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f9f9fb;
+      color: #333;
+      margin: 0;
+      padding: 1rem;
+      max-width: 700px;
+      margin: auto;
+    }
+    h1, h2, h3 { text-align: center; }
+    input[type="text"] {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      transition: border 0.3s;
+    }
+    input[type="text"]:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+    button {
+      padding: 0.75rem 1.25rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      opacity: 0.95;
+    }
+    .send-btn { background-color: #007bff; color: white; width: 100%; }
+    .action-btn { background-color: #28a745; color: white; }
+    .reset-btn { background-color: #dc3545; color: white; }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      margin-bottom: 1rem;
+      transition: transform 0.3s;
+    }
+    .card:hover {
+      transform: scale(1.01);
+    }
+    .card img {
+      max-width: 100%;
+      border-radius: 8px;
+    }
+    .card ul {
+      padding-left: 1rem;
+    }
+    .hidden { display: none; }
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .comparison-table th, .comparison-table td {
+      border: 1px solid #ddd;
+      padding: 0.5rem;
+    }
+    .comparison-table th {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>💳 Credit Card Recommender</h1>
+  <div id="chat-section">
+    <input type="text" id="user-input" placeholder="Type your message..." />
+    <button class="send-btn" onclick="sendMessage()">Send</button>
+    <p id="reply"></p>
+  </div>
+
+  <div id="recommendation-section" class="hidden">
+    <h2>🎉 Top Card Recommendations</h2>
+    <div id="cards"></div>
+    <div style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+      <button class="action-btn" onclick="toggleCompare()">Compare Cards</button>
+      <button class="reset-btn" onclick="resetFlow()">Restart</button>
+    </div>
+    <div id="comparison" class="hidden">
+      <h3>📊 Comparison Table</h3>
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Issuer</th>
+            <th>Rewards</th>
+            <th>Reasons</th>
+          </tr>
+        </thead>
+        <tbody id="comparison-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById('user-input').value;
+      const replyBox = document.getElementById('reply');
+
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: input })
+      });
+
+      const data = await res.json();
+      replyBox.textContent = data.reply;
+      document.getElementById('user-input').value = '';
+
+      if (data.reply.includes("recommend")) {
+        loadRecommendations();
+      }
+    }
+
+    async function loadRecommendations() {
+      const section = document.getElementById('recommendation-section');
+      const chat = document.getElementById('chat-section');
+      const res = await fetch('/recommend');
+      const data = await res.json();
+
+      if (data.cards) {
+        section.classList.remove('hidden');
+        chat.classList.add('hidden');
+        const container = document.getElementById('cards');
+        const tableBody = document.getElementById('comparison-body');
+        container.innerHTML = '';
+        tableBody.innerHTML = '';
+
+        data.cards.forEach(card => {
+          const div = document.createElement('div');
+          div.className = 'card';
+          div.innerHTML = `
+            <img src="${card.image}" alt="${card.name}" />
+            <h3>${card.name}</h3>
+            <p><strong>${card.issuer}</strong></p>
+            <ul>${card.reasons.map(r => `<li>${r}</li>`).join('')}</ul>
+            <p><strong>${card.reward_estimate}</strong></p>
+            <a href="${card.apply_link}" target="_blank" style="color: #007bff">Apply Now</a>
+          `;
+          container.appendChild(div);
+
+          tableBody.innerHTML += `
+            <tr>
+              <td>${card.name}</td>
+              <td>${card.issuer}</td>
+              <td>${card.reward_estimate}</td>
+              <td><ul>${card.reasons.map(r => `<li>${r}</li>`).join('')}</ul></td>
+            </tr>
+          `;
+        });
+      }
+    }
+
+    function toggleCompare() {
+      const comp = document.getElementById('comparison');
+      comp.classList.toggle('hidden');
+    }
+
+    async function resetFlow() {
+      await fetch('/reset', { method: 'POST' });
+      location.reload();
+    }
+  </script>
+</body>
+</html>
+
+
+
