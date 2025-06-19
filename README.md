@@ -23,20 +23,19 @@ It guides users through a series of natural interactions to collect their financ
 ---
  Local Setup
 1. Clone this repository
-git clone https://github.com/your-username/credit-card-recommendation.git
-cd credit-card-recommendation
+-git clone https://github.com/your-username/credit-card-recommendation.git
+-cd credit-card-recommendation
 
 3. Install dependencies
-pip install -r requirements.txt
+-pip install -r requirements.txt
 
 5. Add your Gemini API key
-Create a .env file in the root (same level as main.py):
-
-GEMINI_API_KEY=your_actual_gemini_api_key_here
+-Create a .env file in the root (same level as main.py):
+-GEMINI_API_KEY=your_actual_gemini_api_key_here
 
 4. Start the server
-uvicorn main:app --reload
-Open the browser at http://localhost:8000 — the frontend UI will load.
+-uvicorn main:app --reload
+-Open the browser at http://localhost:8000 — the frontend UI will load.
 
 ---
 🧪 API Overview
