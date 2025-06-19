@@ -28,21 +28,21 @@ It guides users through a series of natural interactions to collect their financ
 
    cd credit-card-recommendation
 
-3. Install dependencies
+2. Install dependencies
    
-  pip install -r requirements.txt
+   pip install -r requirements.txt
 
-5. Add your Gemini API key
+3. Add your Gemini API key
    
-  Create a .env file in the root (same level as main.py):
+   Create a .env file in the root (same level as main.py):
   
-  GEMINI_API_KEY=your_actual_gemini_api_key_here
+   GEMINI_API_KEY=your_actual_gemini_api_key_here
 
 4. Start the server
    
-  uvicorn main:app --reload
+   uvicorn main:app --reload
   
-  Open the browser at http://localhost:8000 — the frontend UI will load.
+   Open the browser at http://localhost:8000 — the frontend UI will load.
 
 ---
 🧪 API Overview
