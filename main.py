@@ -26,38 +26,29 @@ spendings = ["fuel", "groceries", "travel", "dining"]
 benefits = ["cashback", "lounge access", "travel points"]
 
 # Gemini Prompt Logic
-
 def extract_user_info(message: str):
     prompt = f"""
 You are helping a user get a credit card.
+Extract the following from the user's message in JSON:
+- income (convert 60k or 1.2L to numbers)
+- spending (fuel, groceries, travel, dining)
+- benefits (cashback, lounge access, travel points)
+- cards (yes or none)
+- score (good, low, unknown)
+Return ONLY JSON with all fields. Use null for missing.
 
-Extract only the fields clearly mentioned in the message.
-Do NOT guess or infer missing fields.
-Return only this JSON structure:
-
-{{
-  "income": number or null,
-  "spending": string or null,
-  "benefits": string or null,
-  "cards": string ("yes" or "none") or null,
-  "score": string ("good", "low", "unknown") or null
-}}
-
-Respond ONLY with JSON. No extra explanation.
 User: {message}
 """
     try:
-        model = genai.GenerativeModel("gemini-pro")
+        model = genai.GenerativeModel(model_name="gemini-pro")
         response = model.generate_content(prompt)
         text = response.text
-        print("Gemini Raw Response:", text)
+        print("Gemini Response:", text)
         match = re.search(r'{[\s\S]*}', text)
         return json.loads(match.group(0)) if match else {}
     except Exception as e:
         print("Gemini Error:", e)
-        traceback.print_exc()
         return {}
-
 
 def fallback_question(field):
     return {
